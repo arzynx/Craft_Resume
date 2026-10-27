@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resum.me</title>
+  <meta name="description" content="Build an honest, role-targeted one-page resume from your own master profile.">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./resume.css">
+  <style id="print-page-size">@page { size: A4; margin: 0; }</style>
+</head>
+<body>
+  <a class="skip-link" href="#view">Skip to content</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/profile">Resum.me</a>
+      <nav class="tabs" aria-label="Main">
+        <a href="#/profile" data-route="profile">Profile</a>
+        <a href="#/tailor" data-route="tailor">Tailor</a>
+        <a href="#/saved" data-route="saved">Saved</a>
+        <a href="#/rules" data-route="rules">Rules &amp; ATS</a>
+        <a href="#/settings" data-route="settings">Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="view" class="view" tabindex="-1" aria-live="polite"></main>
+
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="modal-root"></div>
+
+  <!-- Offscreen host used to measure a real page for the one-page fit loop -->
+  <div id="fit-host" class="fit-host" aria-hidden="true"></div>
+
+  <!-- Only this element is printed, and only after approval -->
+  <div id="print-root" class="print-root"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
