@@ -1,0 +1,98 @@
+/* Resume rendering. Shared by the on-screen preview, the fit-measure host and print.
+   Standard fonts only (Arial / Helvetica / Liberation Sans), body 10.5pt, sidebar 10pt,
+   margins 0.6in implemented as page padding so screen and print match exactly. */
+.resume {
+  --r-font: Arial, Helvetica, "Liberation Sans", "Helvetica Neue", sans-serif;
+  --r-body: 10.5pt;
+  --r-aside: 10pt;
+  --r-margin: 0.6in;
+  --r-accent: #1f4e79;
+  --r-aside-bg: #eef2f6;
+  --r-text: #111;
+  --r-muted: #444;
+  font-family: var(--r-font);
+  font-size: var(--r-body);
+  line-height: 1.3;
+  color: var(--r-text);
+  background: #fff;
+  padding: var(--r-margin);
+  box-sizing: border-box;
+  width: 210mm;
+  min-height: 297mm;
+  overflow: visible;
+  position: relative;
+}
+.resume.page-A4 { width: 210mm; min-height: 297mm; }
+.resume.page-Letter { width: 8.5in; min-height: 11in; }
+/* measurement mode: fixed height so scrollHeight > clientHeight means overflow */
+.resume.measure.page-A4 { height: 297mm; min-height: 0; overflow: hidden; }
+.resume.measure.page-Letter { height: 11in; min-height: 0; overflow: hidden; }
+
+.resume * { box-sizing: border-box; }
+.resume p, .resume ul, .resume h1, .resume h2, .resume h3 { margin: 0; }
+.resume ul { padding-left: 1.1em; }
+.resume li { margin: 0 0 1.5pt; }
+.resume a { color: inherit; text-decoration: none; }
+
+.r-header { margin-bottom: 8pt; }
+.r-header h1 { font-size: 18pt; font-weight: 700; letter-spacing: .2pt; }
+.r-contact { font-size: var(--r-body); color: var(--r-muted); }
+.r-contact span + span::before { content: " | "; color: #999; }
+.r-links span + span::before { content: " | "; color: #999; }
+.r-photo { width: 1in; height: 1in; object-fit: cover; border-radius: 4pt; }
+.r-header.with-photo { display: flex; gap: 10pt; align-items: center; }
+.r-header.with-photo .r-head-text { flex: 1; }
+
+.r-section { margin-bottom: 7pt; }
+.r-section h2 {
+  font-size: 11.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: .5pt;
+  border-bottom: 1px solid #333; padding-bottom: 1.5pt; margin-bottom: 3.5pt;
+}
+.r-item { margin-bottom: 4.5pt; }
+.r-item-head { display: flex; justify-content: space-between; gap: 8pt; align-items: baseline; }
+.r-item-head .r-heading { font-weight: 700; }
+.r-item-head .r-date { white-space: nowrap; color: var(--r-muted); }
+.r-sub { font-style: italic; color: var(--r-muted); }
+.r-inline { margin-bottom: 1.5pt; }
+.r-inline .r-label { font-weight: 700; }
+.r-inline .r-text + .r-text::before { content: ", "; }
+
+/* text_first: neutral */
+.tpl-text_first .r-section h2 { color: #000; border-color: #000; }
+
+/* text_accent: accent headings only */
+.tpl-text_accent .r-section h2 { color: var(--r-accent); border-color: var(--r-accent); }
+.tpl-text_accent .r-header h1 { color: var(--r-accent); }
+
+/* two_column and two_column_photo: header, then main + aside on a grid.
+   DOM order stays header -> main -> aside for a logical reading order. */
+.tpl-two_column, .tpl-two_column_photo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  grid-template-areas: "header header" "main aside";
+  column-gap: 7mm;
+  align-content: start;
+}
+.tpl-two_column .r-header, .tpl-two_column_photo .r-header { grid-area: header; }
+.tpl-two_column .r-main, .tpl-two_column_photo .r-main { grid-area: main; min-width: 0; }
+.tpl-two_column .r-aside, .tpl-two_column_photo .r-aside {
+  grid-area: aside; font-size: var(--r-aside); background: var(--r-aside-bg);
+  padding: 6pt 7pt; border-radius: 3pt; align-self: start; min-width: 0;
+}
+.tpl-two_column .r-aside h2, .tpl-two_column_photo .r-aside h2 { font-size: 10.5pt; }
+.tpl-two_column .r-section h2, .tpl-two_column_photo .r-section h2 { color: var(--r-accent); border-color: var(--r-accent); }
+.tpl-two_column .r-header h1, .tpl-two_column_photo .r-header h1 { color: var(--r-accent); }
+.tpl-two_column .r-aside .r-inline .r-text,
+.tpl-two_column_photo .r-aside .r-inline .r-text { display: block; }
+.tpl-two_column .r-aside .r-inline .r-text + .r-text::before,
+.tpl-two_column_photo .r-aside .r-inline .r-text + .r-text::before { content: ""; }
+
+/* Printing */
+@media print {
+  .print-root { display: block !important; }
+  .print-root .resume { box-shadow: none; margin: 0; }
+  .resume.page-A4 { width: 210mm; height: 297mm; min-height: 0; overflow: hidden; }
+  .resume.page-Letter { width: 8.5in; height: 11in; min-height: 0; overflow: hidden; }
+  .resume [contenteditable] { outline: none !important; background: none !important; }
+  .resume [data-line-id] { outline: none !important; }
+}
